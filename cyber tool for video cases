@@ -1,0 +1,44 @@
+sudo apt-get install ffmpeg mediainfo libimage-exiftool-perl
+
+
+#!/bin/bash
+
+# Check if a file is provided
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <video_file>"
+    exit 1
+fi
+
+VIDEO_FILE="$1"
+
+# Check if the file exists
+if [ ! -f "$VIDEO_FILE" ]; then
+    echo "File not found!"
+    exit 1
+fi
+
+echo "Analyzing metadata for: $VIDEO_FILE"
+echo "==================================="
+
+# Using ffmpeg to extract metadata
+echo "FFmpeg Metadata:"
+ffmpeg -i "$VIDEO_FILE" 2>&1 | grep -E "Duration|bitrate|Video|Audio"
+
+echo ""
+# Using mediainfo to extract detailed metadata
+echo "MediaInfo Metadata:"
+mediainfo "$VIDEO_FILE"
+
+echo ""
+# Using exiftool to extract metadata
+echo "ExifTool Metadata:"
+exiftool "$VIDEO_FILE"
+
+echo ""
+echo "Metadata analysis completed."
+
+
+chmod +x video_metadata_analysis.sh
+
+./video_metadata_analysis.sh path/to/your/video.mp4
+
